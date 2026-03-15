@@ -1,13 +1,29 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@react-native-vector-icons/ionicons';
 import HomeScreen from '../screens/HomeScreen';
+import AboutScreen from '../screens/AboutScreen';
 
-const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-export default function AppNavigator() {
+const AppNavigator = () => {
+  const iconMap: Record<string, string> = {
+    Home: 'home-outline',
+    About: 'information-circle-outline',
+  };
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          const iconName = iconMap[route.name] || 'ellipse-outline';
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="About" component={AboutScreen} />
+    </Tab.Navigator>
   );
-}
+};
+
+export default AppNavigator;
