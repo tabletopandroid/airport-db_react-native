@@ -1,18 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@react-native-vector-icons/ionicons';
-import HomeScreen from '../screens/HomeScreen';
+import HomeStack from './HomeStack';
 import AboutScreen from '../screens/AboutScreen';
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
   const iconMap: Record<string, string> = {
-    Home: 'home-outline',
+    HomeMain: 'home-outline',
     About: 'information-circle-outline',
   };
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeMain"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           const iconName = iconMap[route.name] || 'ellipse-outline';
@@ -20,7 +20,11 @@ const AppNavigator = () => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen
+        name="HomeMain"
+        component={HomeStack}
+        options={{ title: 'Home', headerShown: false }}
+      />
       <Tab.Screen name="About" component={AboutScreen} />
     </Tab.Navigator>
   );

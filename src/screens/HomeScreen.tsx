@@ -1,11 +1,24 @@
 import { useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Airport } from '../types/airport';
+import type { HomeStackParamList } from '../types/navigation';
 import { getAirportByName } from '../services/airportsApi';
 import globalStyles from '../styles/globalStyles';
+import { spacing } from '../styles/spacing';
+import { typography } from '../styles/typography';
 
-const HomeScreen = () => {
+type Props = NativeStackScreenProps<HomeStackParamList, 'HomeMain'>;
+
+const HomeScreen = ({ navigation }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Airport[]>([]);
 
@@ -24,6 +37,16 @@ const HomeScreen = () => {
     }
   };
 
+  const renderAirportItem = (airport: Airport) => (
+    <Pressable
+      key={airport.id}
+      onPress={() => navigation.navigate('AirportDetails', { airport })}
+      style={globalStyles.cardRectangle}
+    >
+      <Text style={typography.bold}>{airport.attributes.name}</Text>
+    </Pressable>
+  );
+
   const renderSearchResults = () => {
     return (
       searchQuery.length > 2 && (
@@ -31,16 +54,19 @@ const HomeScreen = () => {
           <Text style={globalStyles.subtitle}>
             Search Results ({searchResults.length})
           </Text>
-          {searchResults.length === 0 ? (
-            <Text style={globalStyles.text}>No results found.</Text>
+          {searchResults.length > 0 ? (
+            <View style={globalStyles.section}>
+              {searchResults.map(result => renderAirportItem(result))}
+            </View>
           ) : (
-            searchResults.map((result, index) => (
-              <View key={index} style={{ marginBottom: 8 }}>
-                <Text style={{ fontWeight: 'bold' }}>
-                  {result.attributes.name}
-                </Text>
-              </View>
-            ))
+            <View style={[globalStyles.section, spacing.medium]}>
+              <Text style={globalStyles.text}>Searching for airports...</Text>
+              <ActivityIndicator
+                style={spacing.large}
+                size="large"
+                color="#0000ff"
+              />
+            </View>
           )}
         </View>
       )
@@ -49,14 +75,16 @@ const HomeScreen = () => {
 
   return (
     <ScrollView style={globalStyles.container}>
-      <Text style={globalStyles.title}>Welcome to Your Airport Db!</Text>
+      <Text style={[globalStyles.title, spacing.small]}>
+        Welcome to the Airport Explorer
+      </Text>
       <Text style={globalStyles.text}>
         Explore information about airports around the world. Use the tabs below
         to navigate through the app.
       </Text>
       <View style={globalStyles.section}>
         <TextInput
-          placeholder="Search for an airport..."
+          placeholder="Search for an airport... (at least 3 characters)"
           style={globalStyles.input}
           value={searchQuery}
           onChangeText={handleSearch}
