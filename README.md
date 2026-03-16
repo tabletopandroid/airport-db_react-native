@@ -1,97 +1,100 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Airport Explorer
 
-# Getting Started
+Airport Explorer is a React Native app for searching airports and viewing airport details in a simple mobile UI.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Overview
 
-## Step 1: Start Metro
+The app uses a bottom tab navigator with two main areas:
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- `Home`: Search airports by name and open a details screen for a selected result
+- `About`: Read a short summary of the app and its intended features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+The home tab contains a nested native stack:
+
+- `HomeMain`: Welcome screen plus airport search
+- `AirportDetails`: Airport metadata and map view for the selected airport
+
+## Current Features
+
+- Search airports by name after entering at least 3 characters
+- Show matching airport results from `https://airportsapi.com/api`
+- Navigate from a search result to a dedicated airport details screen
+- View airport code, type, elevation, latitude, longitude, and a map marker
+- Browse the app through bottom-tab navigation
+
+## Project Structure
+
+Key source files:
+
+- `App.tsx`: App entry point with `SafeAreaProvider` and `NavigationContainer`
+- `src/navigation/AppNavigator.tsx`: Bottom-tab navigation
+- `src/navigation/HomeStack.tsx`: Nested home stack navigation
+- `src/screens/HomeScreen.tsx`: Search UI and result list
+- `src/screens/AirportDetailsScreen.tsx`: Airport detail view with map
+- `src/screens/AboutScreen.tsx`: Static about page
+- `src/services/airportsApi.ts`: Airport search API helper
+- `src/types/`: Shared TypeScript types for airports and navigation params
+- `src/styles/`: Shared styling tokens and global styles
+
+## Test Coverage
+
+The Jest test suite covers the main screens and navigation setup:
+
+- `__tests__/HomeScreen.test.tsx`: Verifies welcome content, short-query behavior, search results, and navigation to details
+- `__tests__/AirportDetailsScreen.test.tsx`: Verifies airport detail content and mocked map rendering
+- `__tests__/AboutScreen.test.tsx`: Verifies static about content
+- `__tests__/navigation.test.tsx`: Verifies bottom-tab and home-stack screen registration
+
+Shared test data lives in `testUtils/mockAirport.ts`.
+
+Run the tests with:
 
 ```sh
-# Using npm
+npm test -- --runInBand
+```
+
+## Getting Started
+
+Make sure your React Native environment is set up before running the app:
+
+- [React Native environment setup](https://reactnative.dev/docs/set-up-your-environment)
+
+Install dependencies:
+
+```sh
+npm install
+```
+
+Start Metro:
+
+```sh
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+Run on Android:
 
 ```sh
-# Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+Run on iOS:
 
 ```sh
 bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
 bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Scripts
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+- `npm start`: Start the Metro bundler
+- `npm run android`: Build and run the Android app
+- `npm run ios`: Build and run the iOS app
+- `npm test`: Run Jest tests
+- `npm run lint`: Run ESLint
 
-## Step 3: Modify your app
+## Notes
 
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- Airport search currently begins only when the query length is greater than 2 characters
+- When a search is in progress and no results have been loaded yet, the home screen shows a loading indicator
+- The About screen mentions saving favorite airports, but that feature is not implemented in the current `src` code yet
