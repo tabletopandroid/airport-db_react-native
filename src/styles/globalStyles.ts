@@ -26,7 +26,7 @@ const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: 'whitesmoke',
   },
   input: {
     borderWidth: 1,
@@ -34,6 +34,11 @@ const globalStyles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 16,
+  },
+  list: {
+    color: '#333',
+    marginTop: 16,
+    paddingBottom: 16,
   },
   section: {
     marginTop: 24,

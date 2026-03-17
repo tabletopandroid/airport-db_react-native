@@ -1,7 +1,7 @@
 export type Airport = {
-  id: string;
-  type: string;
-  attributes: {
+  id?: string;
+  type?: string;
+  attributes?: {
     name: string;
     code: string;
     type: string;
@@ -13,7 +13,7 @@ export type Airport = {
     iata_code: string;
     local_code: string;
   };
-  relationships: {
+  relationships?: {
     country: {
       data: {
         type: string;
@@ -27,7 +27,7 @@ export type Airport = {
       };
     };
   };
-  links: {
+  links?: {
     self: {
       href: string;
       rel: string;
