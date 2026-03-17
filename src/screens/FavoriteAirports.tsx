@@ -5,12 +5,12 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Card from '../components/Card';
 import { getAirportListByCode } from '../services/airportsApi';
 import { getFavoriteAirportIds } from '../services/favoritesStorage';
-import { HomeStackParamList } from '../types/navigation';
+import { FavoritesStackParamList } from '../types/navigation';
 import { Airport } from '../types/airport';
 
 import globalStyles from '../styles/globalStyles';
 
-type Props = NativeStackScreenProps<HomeStackParamList, 'AirportDetails'>;
+type Props = NativeStackScreenProps<FavoritesStackParamList, 'FavoritesMain'>;
 
 const FavoriteAirports = ({ navigation }: Props) => {
   const [favoriteAirportIds, setFavoriteAirportIds] = useState<string[]>([]);

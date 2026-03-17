@@ -1,13 +1,17 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@react-native-vector-icons/ionicons';
-import HomeStack from './HomeStack';
-import AboutScreen from '../screens/AboutScreen';
-import FavoriteAirports from '../screens/FavoriteAirports';
+import type { ComponentProps } from 'react';
 
-const Tab = createBottomTabNavigator();
+import HomeStack from './HomeStack';
+import FavoritesStack from './FavoritesStack';
+import AboutScreen from '../screens/AboutScreen';
+import { TabParamList } from '../types/navigation';
+
+const Tab = createBottomTabNavigator<TabParamList>();
+type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
 const AppNavigator = () => {
-  const iconMap: Record<string, string> = {
+  const iconMap: Record<keyof TabParamList, IoniconName> = {
     HomeMain: 'home-outline',
     About: 'information-circle-outline',
     Favorites: 'bookmark-outline',
@@ -17,7 +21,7 @@ const AppNavigator = () => {
       initialRouteName="HomeMain"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          const iconName = iconMap[route.name] || 'ellipse-outline';
+          const iconName = iconMap[route.name];
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
@@ -27,7 +31,11 @@ const AppNavigator = () => {
         component={HomeStack}
         options={{ title: 'Home', headerShown: false }}
       />
-      <Tab.Screen name="Favorites" component={FavoriteAirports} />
+      <Tab.Screen
+        name="Favorites"
+        component={FavoritesStack}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="About" component={AboutScreen} />
     </Tab.Navigator>
   );
