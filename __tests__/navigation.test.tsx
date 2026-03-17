@@ -4,9 +4,12 @@ import ReactTestRenderer, { act } from 'react-test-renderer';
 jest.mock('@react-native-vector-icons/ionicons', () => {
   const React = require('react');
   const { Text } = require('react-native');
+  const MockIonicons = ({ name }: { name: string }) => <Text>{name}</Text>;
 
   return {
-    Ionicons: ({ name }: { name: string }) => <Text>{name}</Text>,
+    __esModule: true,
+    default: MockIonicons,
+    Ionicons: MockIonicons,
   };
 });
 
@@ -27,6 +30,10 @@ jest.mock('react-native-maps', () => {
     Marker,
   };
 });
+
+jest.mock('@react-navigation/native', () => ({
+  useFocusEffect: (callback: () => void) => callback(),
+}));
 
 jest.mock('@react-navigation/bottom-tabs', () => ({
   createBottomTabNavigator: () => {
@@ -88,8 +95,10 @@ jest.mock('@react-navigation/native-stack', () => ({
 
 const AppNavigator = require('../src/navigation/AppNavigator').default;
 const HomeStack = require('../src/navigation/HomeStack').default;
+const FavoritesStack = require('../src/navigation/FavoritesStack').default;
 const AboutScreen = require('../src/screens/AboutScreen').default;
 const AirportDetailsScreen = require('../src/screens/AirportDetailsScreen').default;
+const FavoriteAirports = require('../src/screens/FavoriteAirports').default;
 const HomeScreen = require('../src/screens/HomeScreen').default;
 
 describe('navigation', () => {
@@ -101,6 +110,9 @@ describe('navigation', () => {
     });
 
     const homeTab = renderer!.root.findByProps({ testID: 'tab-screen-HomeMain' });
+    const favoritesTab = renderer!.root.findByProps({
+      testID: 'tab-screen-Favorites',
+    });
     const aboutTab = renderer!.root.findByProps({ testID: 'tab-screen-About' });
 
     expect(homeTab.props.component).toBe(HomeStack);
@@ -108,6 +120,8 @@ describe('navigation', () => {
       title: 'Home',
       headerShown: false,
     });
+    expect(favoritesTab.props.component).toBe(FavoritesStack);
+    expect(favoritesTab.props.options).toEqual({ headerShown: false });
     expect(aboutTab.props.component).toBe(AboutScreen);
   });
 
@@ -127,6 +141,30 @@ describe('navigation', () => {
 
     expect(homeScreen.props.component).toBe(HomeScreen);
     expect(homeScreen.props.options).toEqual({ headerShown: false });
+    expect(detailsScreen.props.component).toBe(AirportDetailsScreen);
+    expect(detailsScreen.props.options).toEqual({
+      title: 'Airport Details',
+    });
+  });
+
+  it('registers the expected favorites stack screens', async () => {
+    let renderer: ReactTestRenderer.ReactTestRenderer;
+
+    await act(async () => {
+      renderer = ReactTestRenderer.create(<FavoritesStack />);
+    });
+
+    const favoritesScreen = renderer!.root.findByProps({
+      testID: 'stack-screen-FavoritesMain',
+    });
+    const detailsScreen = renderer!.root.findByProps({
+      testID: 'stack-screen-AirportDetails',
+    });
+
+    expect(favoritesScreen.props.component).toBe(FavoriteAirports);
+    expect(favoritesScreen.props.options).toEqual({
+      title: 'Favorites',
+    });
     expect(detailsScreen.props.component).toBe(AirportDetailsScreen);
     expect(detailsScreen.props.options).toEqual({
       title: 'Airport Details',

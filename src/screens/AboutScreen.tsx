@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import globalStyles from '../styles/globalStyles';
+import TextLink from '../components/TextLink';
 
 const AboutScreen = () => {
   return (
@@ -19,10 +20,19 @@ const AboutScreen = () => {
         </Text>
       </View>
       <View style={globalStyles.section}>
+        <Text style={globalStyles.subtitle}>API Source:</Text>
+        <Text style={globalStyles.text}>
+          Data for the airports are provided by
+          <TextLink url="https://airportsapi.com">airportsapi.com</TextLink>.
+        </Text>
+      </View>
+      <View style={globalStyles.section}>
         <Text style={globalStyles.subtitle}>Contact Us:</Text>
         <Text style={globalStyles.text}>
           If you have any questions or feedback, please contact us at
-          support@tabletopandroid.com
+          <TextLink url="mailto:support@tabletopandroid.com">
+            support@tabletopandroid.com
+          </TextLink>
         </Text>
       </View>
     </View>

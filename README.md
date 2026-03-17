@@ -1,63 +1,67 @@
 # Airport Explorer
 
-Airport Explorer is a React Native app for searching airports and viewing airport details in a simple mobile UI.
+Airport Explorer is a React Native app for searching airports, viewing airport details on a map, and saving favorite airports for quick access.
 
-## Overview
+## Current State
 
-The app uses a bottom tab navigator with two main areas:
+The app currently includes:
 
-- `Home`: Search airports by name and open a details screen for a selected result
-- `About`: Read a short summary of the app and its intended features
+- Airport search by name using the public `https://airportsapi.com/api` endpoint
+- A details screen with airport metadata and a map marker
+- Favorite airport storage backed by `@react-native-async-storage/async-storage`
+- Bottom-tab navigation for `Home`, `Favorites`, and `About`
+- Separate native stacks for `Home` and `Favorites`, each with access to `AirportDetails`
 
-The home tab contains a nested native stack:
+## Navigation
 
-- `HomeMain`: Welcome screen plus airport search
-- `AirportDetails`: Airport metadata and map view for the selected airport
+- `Home` tab
+  - `HomeMain`: Welcome copy plus airport search
+  - `AirportDetails`: Details for a selected search result
+- `Favorites` tab
+  - `FavoritesMain`: Saved airport list loaded from local storage
+  - `AirportDetails`: Details for a selected favorite airport
+- `About` tab
+  - Static app summary and contact details
 
-## Current Features
+## Features
 
-- Search airports by name after entering at least 3 characters
-- Show matching airport results from `https://airportsapi.com/api`
-- Navigate from a search result to a dedicated airport details screen
-- View airport code, type, elevation, latitude, longitude, and a map marker
-- Browse the app through bottom-tab navigation
+- Search begins after entering at least 3 characters
+- Search results are fetched from the airport API and shown in-app
+- Airport details include code, type, elevation, latitude, longitude, and a map
+- Airports can be added to or removed from favorites from the details screen
+- Favorite airports persist between app launches
+
+## Tech Stack
+
+- React Native `0.84.1`
+- React `19.2.3`
+- React Navigation bottom tabs and native stacks
+- React Native Maps
+- AsyncStorage for local persistence
+- TypeScript
 
 ## Project Structure
 
-Key source files:
-
 - `App.tsx`: App entry point with `SafeAreaProvider` and `NavigationContainer`
-- `src/navigation/AppNavigator.tsx`: Bottom-tab navigation
-- `src/navigation/HomeStack.tsx`: Nested home stack navigation
-- `src/screens/HomeScreen.tsx`: Search UI and result list
-- `src/screens/AirportDetailsScreen.tsx`: Airport detail view with map
-- `src/screens/AboutScreen.tsx`: Static about page
-- `src/services/airportsApi.ts`: Airport search API helper
-- `src/types/`: Shared TypeScript types for airports and navigation params
-- `src/styles/`: Shared styling tokens and global styles
-
-## Test Coverage
-
-The Jest test suite covers the main screens and navigation setup:
-
-- `__tests__/HomeScreen.test.tsx`: Verifies welcome content, short-query behavior, search results, and navigation to details
-- `__tests__/AirportDetailsScreen.test.tsx`: Verifies airport detail content and mocked map rendering
-- `__tests__/AboutScreen.test.tsx`: Verifies static about content
-- `__tests__/navigation.test.tsx`: Verifies bottom-tab and home-stack screen registration
-
-Shared test data lives in `testUtils/mockAirport.ts`.
-
-Run the tests with:
-
-```sh
-npm test -- --runInBand
-```
+- `src/navigation/AppNavigator.tsx`: Bottom-tab navigator
+- `src/navigation/HomeStack.tsx`: Home stack
+- `src/navigation/FavoritesStack.tsx`: Favorites stack
+- `src/screens/HomeScreen.tsx`: Search experience
+- `src/screens/FavoriteAirports.tsx`: Favorite airport list
+- `src/screens/AirportDetailsScreen.tsx`: Airport details and map
+- `src/screens/AboutScreen.tsx`: Static about content
+- `src/services/airportsApi.ts`: Airport API helpers
+- `src/services/favoritesStorage.ts`: Favorite airport persistence helpers
+- `src/types/`: Shared TypeScript types
+- `docs/android.md`: Direct Android device install guide
 
 ## Getting Started
 
-Make sure your React Native environment is set up before running the app:
+Prerequisites:
 
-- [React Native environment setup](https://reactnative.dev/docs/set-up-your-environment)
+- Node.js `>= 22.11.0`
+- A React Native Android toolchain set up locally
+- An Android SDK with `adb` available on your `PATH`
 
 Install dependencies:
 
@@ -71,30 +75,24 @@ Start Metro:
 npm start
 ```
 
-Run on Android:
+Run on an Android emulator or attached device with the React Native CLI:
 
 ```sh
 npm run android
 ```
 
-Run on iOS:
-
-```sh
-bundle install
-bundle exec pod install
-npm run ios
-```
+For direct APK installation on a physical Android phone, see [docs/android.md](docs/android.md).
 
 ## Scripts
 
 - `npm start`: Start the Metro bundler
-- `npm run android`: Build and run the Android app
-- `npm run ios`: Build and run the iOS app
+- `npm run android`: Build and deploy the Android app with React Native CLI
+- `npm run ios`: Run the iOS app
 - `npm test`: Run Jest tests
 - `npm run lint`: Run ESLint
 
 ## Notes
 
-- Airport search currently begins only when the query length is greater than 2 characters
-- When a search is in progress and no results have been loaded yet, the home screen shows a loading indicator
-- The About screen mentions saving favorite airports, but that feature is not implemented in the current `src` code yet
+- The app uses a Google Maps API key configured in `android/app/build.gradle`
+- Some TypeScript nullability issues still exist in the current codebase, mainly around optional airport attributes
+- The release build is currently configured to use the debug signing config, which is convenient for local installs but not suitable for store distribution
